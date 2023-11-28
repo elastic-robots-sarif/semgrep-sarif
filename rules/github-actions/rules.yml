@@ -1,0 +1,58 @@
+rules:
+  - id: upload-artifact-retention
+    languages:
+      - yaml
+    message: This GitHub Actions workflow file uses `actions/upload-artifact` steps.
+      Set retention-policy to reduce the cost of what you pay for.
+    metadata:
+      category: best-practice
+      technology:
+        - github-actions
+    patterns:
+      - pattern-inside: |
+          jobs:
+            ...
+            $JOBNAME:
+              ...
+              steps:
+                ...
+      - patterns:
+        - pattern: |
+            ...
+            uses: "$ACTION"
+        - pattern-not: |
+            ...
+            uses: "$ACTION"
+            with:
+              ...
+              retention-days: ...
+      - metavariable-regex:
+          metavariable: $ACTION
+          regex: actions/upload-artifact@.*
+    severity: WARNING
+
+  - id: step-run-with-name
+    languages:
+      - yaml
+    message: This GitHub Actions workflow file uses `run` steps.
+      Use name to help with documenting what the step does.
+    metadata:
+      category: best-practice
+      technology:
+        - github-actions
+    patterns:
+      - pattern-inside: |
+          jobs:
+            ...
+            $JOBNAME:
+              ...
+              steps:
+                ...
+      - pattern: |
+          ...
+          run: $ACTION
+      - pattern-not: |
+          ...
+          run: $ACTION
+          name: $NAME
+    severity: WARNING

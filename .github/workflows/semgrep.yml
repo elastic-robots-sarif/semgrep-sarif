@@ -1,0 +1,26 @@
+---
+name: semgrep
+
+on:
+  workflow_dispatch: ~
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+
+    container:
+      image: returntocorp/semgrep
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: semgrep ci --config 'p/github-actions' --config rules/github-actions/rules.yml --sarif > findings.sarif
+
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: findings.sarif
