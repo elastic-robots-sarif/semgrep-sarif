@@ -19,7 +19,7 @@ jobs:
       image: returntocorp/semgrep
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - run: semgrep scan --config 'p/github-actions' --config rules/github-actions/rules.yml --sarif > findings.sarif
 
